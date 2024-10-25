@@ -1,0 +1,36 @@
+import requests
+
+def get_best_structurs_data_from_pdbe(accession):
+    return requests.get(f"https://www.ebi.ac.uk/pdbe/graph-api/mappings/best_structures/{accession}").json()
+
+def get_sequence_and_structural_domains_from_pdbe(pdb_id, entity_id):
+    return requests.get(f'https://www.ebi.ac.uk/pdbe/graph-api/pdbe_pages/domains/{pdb_id}/{entity_id}/').json()
+
+
+
+def domeny_najlepszej_rozdzielczosci_dla_identyfikatora(identyfikator):
+    data = get_best_structurs_data_from_pdbe(identyfikator)
+    # https://www.ebi.ac.uk/pdbe/graph-api/mappings/best_structures/Q9NR28
+
+
+    dane_z_pierwszej_funkcji=data[identyfikator]
+    rozdzielczosci=[]
+    max_indeks=0
+    max_rozdz=0
+
+    for i in range(len(dane_z_pierwszej_funkcji)):
+        if(dane_z_pierwszej_funkcji[i]['experimental_method']=='Electron Microscopy'):
+            rozdzielczosci.append(dane_z_pierwszej_funkcji[i]['resolution'])
+            #największa rozdzielczość jest najlepsza
+            if(max_rozdz<rozdzielczosci[len(rozdzielczosci)-1]):
+                max_indeks=i
+
+
+    dane_z_drugiej_funkcji=get_sequence_and_structural_domains_from_pdbe(dane_z_pierwszej_funkcji[max_indeks]['pdb_id'],dane_z_pierwszej_funkcji[max_indeks]['entity_id'])
+
+    for i in dane_z_drugiej_funkcji[dane_z_pierwszej_funkcji[max_indeks]['pdb_id']]['data'][0]['residues']:
+        print(i['additionalData']['domainName'])
+
+
+dany_id="Q9NR28"
+domeny_najlepszej_rozdzielczosci_dla_identyfikatora(dany_id)
