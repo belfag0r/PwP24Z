@@ -1,4 +1,5 @@
 # potpowiedź do zadania 8_1
+# już to poprawiłem.. xD
 
 zdanie1 = "To jest zdanie"
 zdanie2 = "To jest kadjasf"
@@ -24,7 +25,7 @@ for zdanie in lista_zdan:
 
     for word in zdanie:
         tf = zdanie.count(word)/len(zdanie)
-        wektor_zdania[word_2_idx[zdanie]] = tf*idf[word]
+        wektor_zdania[word_2_idx[word]] = tf*word_2_idf[word]
 
     wektory.append(wektor_zdania)
 """
